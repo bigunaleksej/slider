@@ -1,0 +1,39 @@
+.container {
+    height: 600px;
+    text-align: center;
+}
+
+.slider {
+    height: 200px;
+    width: 400px;
+    border: 5px solid #eaeaea;
+    margin: 60px auto 0;
+    background: #000;
+    .mask {
+        height: 200px;
+        overflow: hidden;
+        ul {
+            position: relative;
+            li {
+                position: absolute;
+                height: 200px;
+                width: 400px;
+                transition: left 0.7s ease-in 0.3s;
+                background-color: darkslategrey;
+                color: #4dbcf8;
+                &.current {
+                    left: 0;
+                }
+                &.inactive {
+                    display: none;
+                }
+                &.previous {
+                    left: -400px;
+                }
+                &.next {
+                    left: 400px;
+                }
+            }
+        }
+    }
+}

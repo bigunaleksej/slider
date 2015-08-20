@@ -1,0 +1,38 @@
+.container {
+  height: 600px;
+  text-align: center;
+}
+.slider {
+  height: 200px;
+  width: 400px;
+  border: 5px solid #eaeaea;
+  margin: 60px auto 0;
+  background: #000;
+}
+.slider .mask {
+  height: 200px;
+  overflow: hidden;
+}
+.slider .mask ul {
+  position: relative;
+}
+.slider .mask ul li {
+  position: absolute;
+  height: 200px;
+  width: 400px;
+  transition: left 0.7s ease-in 0.3s;
+  background-color: darkslategrey;
+  color: #4dbcf8;
+}
+.slider .mask ul li.current {
+  left: 0;
+}
+.slider .mask ul li.inactive {
+  display: none;
+}
+.slider .mask ul li.previous {
+  left: -400px;
+}
+.slider .mask ul li.next {
+  left: 400px;
+}

@@ -36,7 +36,28 @@
         <input type="button" name="next" value="next"/>
     </div>
 
-    <script src="helpers.js"></script>
     <script src="slider.js"></script>
+    <script type="text/javascript">
+        var config = {
+            // arbitrary number of images
+            images: [
+                'img/img1.jpg',
+                'img/img2.jpg',
+                'img/img3.jpg',
+                'img/img4.jpg',
+                'img/img5.jpg'
+            ],
+            // possible values: 'auto', 'manual', 'automanual'
+            mode: 'auto',
+            // arbitrary interger (miliseconds)
+            swipeSpeed: 500,
+            // arbitrary interger (miliseconds). This is used in 'auto' and 'automanual' modes
+            swipeDelay: 3000
+        };
+
+        var slider = Object.create(Slider);
+
+        slider.init('slider', config);
+    </script>
 </body>
 </html>

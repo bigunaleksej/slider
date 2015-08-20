@@ -3,8 +3,8 @@
   text-align: center;
 }
 .slider {
-  height: 200px;
-  width: 400px;
+  height: 180px;
+  width: 240px;
   border: 5px solid #eaeaea;
   margin: 60px auto 0;
   background: #000;
@@ -18,8 +18,8 @@
 }
 .slider .mask ul li {
   position: absolute;
-  height: 200px;
-  width: 400px;
+  height: 180px;
+  width: 240px;
   transition: left 0.7s ease-in 0.3s;
   background-color: darkslategrey;
   color: #4dbcf8;
@@ -31,8 +31,8 @@
   display: none;
 }
 .slider .mask ul li.previous {
-  left: -400px;
+  left: -240px;
 }
 .slider .mask ul li.next {
-  left: 400px;
+  left: 240px;
 }

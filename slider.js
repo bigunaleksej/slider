@@ -17,6 +17,7 @@ var Slider = {
             this._slides = ul.children;
             slider.setAttribute('class', 'slider');
             mask.setAttribute('class', 'mask');
+            ul.setAttribute('class', 'slide');
 
             for (var i = 0, length = images.length; i < length; i++) {
                 slide = document.createElement('li');

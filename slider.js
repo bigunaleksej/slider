@@ -1,11 +1,29 @@
-/**
- * Created by abigun on 8/20/2015.
- */
 var Slider = {
         init: function (id, config) {
+            this.sliderEl = document.querySelector('#' + id);
+
+            this._setOptions(config);
             this._crateSlider(id, config.images);
-            this.sliderId = id;
-            this.currentSlide = 0;
+            this._setEventsListener();
+            this._afterInit();
+        },
+
+        _afterInit: function () {
+            this.play();
+        },
+
+        _setOptions: function () {
+            this.autoDelay = 2000;
+        },
+
+        _setEventsListener: function () {
+            this.sliderEl.addEventListener('mouseenter', function () {
+                slider.stop()
+            });
+
+            this.sliderEl.addEventListener('mouseleave', function () {
+                slider.play()
+            });
         },
 
         _crateSlider: function (id, images) {
@@ -35,37 +53,59 @@ var Slider = {
 
             mask.appendChild(ul);
             slider.appendChild(mask);
-            document.querySelector('#' + id).appendChild(slider);
+            this.sliderEl.appendChild(slider);
         },
 
-        _next: function () {
-            var involvedElements = this._getInvolvedElement(),
-                newInvolvedElement = involvedElements[2].nextElementSibling || this._slides[0];
+        next: function () {
+            var involvedSlides = this._getInvolvedSlides(),
+                newInvolvedSlide = involvedSlides[2].nextElementSibling || this._slides[0];
 
-            involvedElements[0].setAttribute('class', 'inactive');
-            involvedElements[1].setAttribute('class', 'previous');
-            involvedElements[2].setAttribute('class', 'current');
-            newInvolvedElement.setAttribute('class', 'next');
+            involvedSlides[0].setAttribute('class', 'inactive');
+            involvedSlides[1].setAttribute('class', 'previous');
+            involvedSlides[2].setAttribute('class', 'current');
+            newInvolvedSlide.setAttribute('class', 'next');
         },
 
-        _previous: function () {
-            var involvedElements = this._getInvolvedElement(),
-                newInvolvedElement = involvedElements[0].previousElementSibling || this._slides[this._slides.length-1];
+        previous: function () {
+            var involvedSlides = this._getInvolvedSlides(),
+                newInvolvedSlide = involvedSlides[0].previousElementSibling || this._slides[this._slides.length-1];
 
-            involvedElements[2].setAttribute('class', 'inactive');
-            newInvolvedElement.setAttribute('class', 'previous');
-            involvedElements[0].setAttribute('class', 'current');
-            involvedElements[1].setAttribute('class', 'next');
+            involvedSlides[2].setAttribute('class', 'inactive');
+            newInvolvedSlide.setAttribute('class', 'previous');
+            involvedSlides[0].setAttribute('class', 'current');
+            involvedSlides[1].setAttribute('class', 'next');
         },
 
-        _getInvolvedElement: function () {
-            var elments = [];
+        play: function() {
+            this.stop();
+            this._play = setInterval(this.next.bind(this), this.autoDelay);
+        },
 
-            elments.push(document.querySelector('#' + this.sliderId + ' .previous'));
-            elments.push(document.querySelector('#' + this.sliderId + ' .current'));
-            elments.push(document.querySelector('#' + this.sliderId + ' .next'));
-            return elments;
+        stop: function() {
+            clearInterval(this._play);
+        },
+
+        _getInvolvedSlides: function () {
+            var slides = [];
+
+            slides.push(this.sliderEl.querySelector('.previous'));
+            slides.push(this.sliderEl.querySelector('.current'));
+            slides.push(this.sliderEl.querySelector('.next'));
+            return slides;
         },
 };
 
+var SwipeSlider = Object.create(Slider);
+
+SwipeSlider._setEventsListener = function () {
+    this.sliderEl.addEventListener('mouseenter', function () {
+        console.info('SwipeSlider');
+        slider.stop()
+    });
+
+    this.sliderEl.addEventListener('mouseleave', function () {
+        console.info('SwipeSlider');
+        slider.play()
+    });
+};
 

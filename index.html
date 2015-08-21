@@ -10,9 +10,6 @@
 
     <div class="container">
         <div id="slider"></div>
-
-        <input type="button" name="previous" value="previous"/>
-        <input type="button" name="next" value="next"/>
     </div>
 
     <script src="slider.js"></script>
@@ -34,7 +31,7 @@
             swipeDelay: 3000
         };
 
-        var slider = Object.create(Slider);
+        var slider = Object.create(SwipeSlider);
 
         slider.init('slider', config);
     </script>

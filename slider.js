@@ -40,7 +40,6 @@ var Slider = {
             for (var i = 0, length = images.length; i < length; i++) {
                 slide = document.createElement('li');
                 slide.setAttribute('class', 'inactive');
-                slide.id = 'slide' + i;
                 slideImg = document.createElement('img');
                 slideImg.src = images[i];
                 slide.appendChild(slideImg);
@@ -97,15 +96,48 @@ var Slider = {
 
 var SwipeSlider = Object.create(Slider);
 
+SwipeSlider._afterInit = function () {
+
+},
+
 SwipeSlider._setEventsListener = function () {
+    var x, newX,
+        detecting = false,
+        started = false;
+
     this.sliderEl.addEventListener('mouseenter', function () {
-        console.info('SwipeSlider');
+        console.info('stop');
         slider.stop()
     });
 
     this.sliderEl.addEventListener('mouseleave', function () {
-        console.info('SwipeSlider');
+        console.info('play');
         slider.play()
     });
+
+    this.sliderEl.addEventListener('touchstart', function (e) {
+        detecting = true;
+
+        x = e.changedTouches[0].pageX;
+        console.info('Start :', e);
+    });
+
+    this.sliderEl.addEventListener('touchmove', function (e) {
+        newX = e.changedTouches[0].pageX;
+
+        console.info('Move :', e);
+    })
+
+    this.sliderEl.addEventListener('touchend', (function (e) {
+        e.preventDefault();
+
+        /*
+         Определяем, в какую сторону нужно произвести перелистывание
+         */
+        swipe = x - newX < 0 ? this.next.bind(this) : this.previous.bind(this);
+
+        swipe();
+        console.info('End :', e);
+    }).bind(this));
 };
 

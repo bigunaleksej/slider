@@ -1,143 +1,180 @@
+//Main Slider class
 var Slider = {
-        init: function (id, config) {
-            this.sliderEl = document.querySelector('#' + id);
+    init: function (id, config) {
+        this.sliderWrapperEl = document.querySelector('#' + id);
 
-            this._setOptions(config);
-            this._crateSlider(id, config.images);
-            this._setEventsListener();
-            this._afterInit();
-        },
+        this._setOptions(config);
+        this._crateSlider(id, config.images);
+        this._setEventsListener();
+    },
 
-        _afterInit: function () {
+    _setOptions: function () {
+        this.swipeSpeed = 1000;
+        this.swipeDelay = 3000;
+        this.animationType = 'slide';
+    },
+
+    _setEventsListener: function () {
+        if (this.mode === 'auto' || this.mode === 'automanual') {
+            this._setAutoSlideListener();
             this.play();
-        },
+        }
+        if (this.mode === 'manual' || this.mode === 'automanual') {
+            this._setSwipeListener();
+        }
+    },
 
-        _setOptions: function () {
-            this.autoDelay = 2000;
-        },
+    _setAutoSlideListener: function () {
+        this.sliderEl.addEventListener('mouseenter', (function () {
+            console.info('stop');
+            this.stop()
+        }).bind(this));
 
-        _setEventsListener: function () {
-            this.sliderEl.addEventListener('mouseenter', function () {
-                slider.stop()
-            });
+        this.sliderEl.addEventListener('mouseleave', (function () {
+            console.info('play');
+            this.play()
+        }).bind(this));
+    },
 
-            this.sliderEl.addEventListener('mouseleave', function () {
-                slider.play()
-            });
-        },
+    _setSwipeListener: function () {
+        var x, newX, detect = false;
 
-        _crateSlider: function (id, images) {
-            var slider = document.createElement('div'),
-                mask = document.createElement('div'),
-                ul = document.createElement('ul'),
-                slide;
+        //Init events for touch devices
+        this.sliderEl.addEventListener('touchstart', function (e) {
+            detect = true;
+            e.preventDefault();
+            newX = x = e.changedTouches[0].pageX;
+        });
 
-            this._slides = ul.children;
-            slider.setAttribute('class', 'slider');
-            mask.setAttribute('class', 'mask');
-            ul.setAttribute('class', 'slide');
-
-            for (var i = 0, length = images.length; i < length; i++) {
-                slide = document.createElement('li');
-                slide.setAttribute('class', 'inactive');
-                slideImg = document.createElement('img');
-                slideImg.src = images[i];
-                slide.appendChild(slideImg);
-                ul.appendChild(slide);
+        this.sliderEl.addEventListener('touchmove', function (e) {
+            e.preventDefault();
+            if (detect) {
+                newX = e.changedTouches[0].pageX;
             }
+        })
 
-            this._slides[0].setAttribute('class', 'current');
-            this._slides[1].setAttribute('class', 'next');
-            this._slides[this._slides.length-1].setAttribute('class', 'previous');
+        this.sliderEl.addEventListener('touchend', makeSwipe.bind(this));
 
-            mask.appendChild(ul);
-            slider.appendChild(mask);
-            this.sliderEl.appendChild(slider);
-        },
+        //Init events for desktop
+        this.sliderEl.addEventListener('mousedown', function (e) {
+            detect = true;
+            e.preventDefault();
+            newX = x = e.x;
+        });
 
-        next: function () {
-            var involvedSlides = this._getInvolvedSlides(),
-                newInvolvedSlide = involvedSlides[2].nextElementSibling || this._slides[0];
+        this.sliderEl.addEventListener('mousemove', function (e) {
+            e.preventDefault();
+            if (detect) {
+                newX = e.x;
+            }
+        })
 
-            involvedSlides[0].setAttribute('class', 'inactive');
-            involvedSlides[1].setAttribute('class', 'previous');
-            involvedSlides[2].setAttribute('class', 'current');
-            newInvolvedSlide.setAttribute('class', 'next');
-        },
+        this.sliderEl.addEventListener('mouseup', makeSwipe.bind(this));
 
-        previous: function () {
-            var involvedSlides = this._getInvolvedSlides(),
-                newInvolvedSlide = involvedSlides[0].previousElementSibling || this._slides[this._slides.length-1];
+        function makeSwipe(e) {
+            var deltaX = x - newX;
 
-            involvedSlides[2].setAttribute('class', 'inactive');
-            newInvolvedSlide.setAttribute('class', 'previous');
-            involvedSlides[0].setAttribute('class', 'current');
-            involvedSlides[1].setAttribute('class', 'next');
-        },
+            e.preventDefault();
+            if (deltaX > 50) {
+                this.next.bind(this)();
+            }
+            if (deltaX < -50) {
+                this.previous.bind(this)();
+            }
+            detect = false;
+        }
+    },
 
-        play: function() {
-            this.stop();
-            this._play = setInterval(this.next.bind(this), this.autoDelay);
-        },
+    _crateSlider: function (id, images) {
+        var slider = document.createElement('div'),
+            mask = document.createElement('div'),
+            ul = document.createElement('ul'),
+            slide, slideImg;
 
-        stop: function() {
-            clearInterval(this._play);
-        },
+        this._slides = ul.children;
+        slider.setAttribute('class', 'slider');
+        mask.setAttribute('class', 'mask');
+        ul.setAttribute('class', this.animationType);
 
-        _getInvolvedSlides: function () {
-            var slides = [];
+        for (var i = 0, length = images.length; i < length; i++) {
+            slide = document.createElement('li');
+            slide.setAttribute('class', 'inactive');
+            slideImg = document.createElement('img');
+            slideImg.src = images[i];
+            slide.appendChild(slideImg);
+            ul.appendChild(slide);
+        }
 
-            slides.push(this.sliderEl.querySelector('.previous'));
-            slides.push(this.sliderEl.querySelector('.current'));
-            slides.push(this.sliderEl.querySelector('.next'));
-            return slides;
-        },
+        this._slides[0].setAttribute('class', 'current');
+        this._slides[1].setAttribute('class', 'next');
+        this._slides[this._slides.length-1].setAttribute('class', 'previous');
+
+        mask.appendChild(ul);
+        slider.appendChild(mask);
+        this.sliderWrapperEl.appendChild(slider);
+        this.sliderEl = this.sliderWrapperEl.querySelector('.slider');
+    },
+
+    _getInvolvedSlides: function () {
+        var slides = [];
+
+        slides.push(this.sliderEl.querySelector('.previous'));
+        slides.push(this.sliderEl.querySelector('.current'));
+        slides.push(this.sliderEl.querySelector('.next'));
+        return slides;
+    },
+
+    next: function () {
+        var involvedSlides = this._getInvolvedSlides(),
+            newInvolvedSlide = involvedSlides[2].nextElementSibling || this._slides[0];
+
+        involvedSlides[0].setAttribute('class', 'inactive');
+        involvedSlides[1].setAttribute('class', 'previous');
+        involvedSlides[2].setAttribute('class', 'current');
+        newInvolvedSlide.setAttribute('class', 'next');
+
+        return true;
+    },
+
+    previous: function () {
+        var involvedSlides = this._getInvolvedSlides(),
+            newInvolvedSlide = involvedSlides[0].previousElementSibling || this._slides[this._slides.length-1];
+
+        involvedSlides[2].setAttribute('class', 'inactive');
+        newInvolvedSlide.setAttribute('class', 'previous');
+        involvedSlides[0].setAttribute('class', 'current');
+        involvedSlides[1].setAttribute('class', 'next');
+
+        return true;
+    },
+
+    play: function() {
+        this.stop();
+        this._play = setInterval(this.next.bind(this), this.swipeDelay);
+    },
+
+    stop: function() {
+        clearInterval(this._play);
+    }
 };
 
-var SwipeSlider = Object.create(Slider);
+// SlideSlider subclass
+var SlideSlider = Object.create(Slider);
 
-SwipeSlider._afterInit = function () {
+SlideSlider._setOptions = function (config) {
+    this.mode = config.mode || 'manual';
+    this.swipeSpeed = config.swipeSpeed || 1000;
+    this.swipeDelay = config.swipeDelay || 3000;
+    this.animationType = 'slide';
+};
 
-},
+// FadeInSlider subclass
+var FadeInSlider = Object.create(Slider);
 
-SwipeSlider._setEventsListener = function () {
-    var x, newX,
-        detecting = false,
-        started = false;
-
-    this.sliderEl.addEventListener('mouseenter', function () {
-        console.info('stop');
-        slider.stop()
-    });
-
-    this.sliderEl.addEventListener('mouseleave', function () {
-        console.info('play');
-        slider.play()
-    });
-
-    this.sliderEl.addEventListener('touchstart', function (e) {
-        detecting = true;
-
-        x = e.changedTouches[0].pageX;
-        console.info('Start :', e);
-    });
-
-    this.sliderEl.addEventListener('touchmove', function (e) {
-        newX = e.changedTouches[0].pageX;
-
-        console.info('Move :', e);
-    })
-
-    this.sliderEl.addEventListener('touchend', (function (e) {
-        e.preventDefault();
-
-        /*
-         Определяем, в какую сторону нужно произвести перелистывание
-         */
-        swipe = x - newX < 0 ? this.next.bind(this) : this.previous.bind(this);
-
-        swipe();
-        console.info('End :', e);
-    }).bind(this));
+FadeInSlider._setOptions = function (config) {
+    this.mode = config.mode || 'manual';
+    this.swipeSpeed = config.swipeSpeed || 1000;
+    this.swipeDelay = config.swipeDelay || 3000;
+    this.animationType = 'fadein';
 };
 

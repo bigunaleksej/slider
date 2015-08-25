@@ -9,12 +9,15 @@
 <body>
 
     <div class="container">
-        <div id="slider"></div>
+        <div id="slider1"></div>
+        <div id="slider2"></div>
+        <div id="slider3"></div>
+        <div id="slider4"></div>
     </div>
 
     <script src="slider.js"></script>
     <script type="text/javascript">
-        var config = {
+        var config1 = {
             // arbitrary number of images
             images: [
                 'img/img_1.jpg',
@@ -24,16 +27,32 @@
                 'img/img_5.jpg'
             ],
             // possible values: 'auto', 'manual', 'automanual'
-            mode: 'auto',
-            // arbitrary interger (miliseconds)
+            mode: 'automanual',
             swipeSpeed: 500,
-            // arbitrary interger (miliseconds). This is used in 'auto' and 'automanual' modes
-            swipeDelay: 3000
-        };
+            swipeDelay: 1200
+                },
+            config2 = {
+                images: [
+                    'img/img_1.jpg',
+                    'img/img_2.jpg',
+                    'img/img_3.jpg',
+                    'img/img_4.jpg',
+                    'img/img_5.jpg'
+                ],
+                mode: 'manual',
+                swipeSpeed: 500,
+                swipeDelay: 3000
+            };
 
-        var slider = Object.create(SwipeSlider);
+        var slider1 = Object.create(SlideSlider);
+        var slider2 = Object.create(SlideSlider);
+        var slider3 = Object.create(FadeInSlider);
+        var slider4 = Object.create(FadeInSlider);
 
-        slider.init('slider', config);
+        slider1.init('slider1', config1);
+        slider2.init('slider2', config2);
+        slider3.init('slider3', config1);
+        slider4.init('slider4', config2);
     </script>
 </body>
 </html>

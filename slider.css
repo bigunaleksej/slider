@@ -36,18 +36,18 @@
 .slider .mask ul.slide li.next {
   left: 100%;
 }
-.slider .mask ul.fade li {
+.slider .mask ul.fadein li {
   transition: opacity 0.7s ease-in 0.3s;
 }
-.slider .mask ul.fade li.current {
+.slider .mask ul.fadein li.current {
   opacity: 1;
 }
-.slider .mask ul.fade li.inactive {
+.slider .mask ul.fadein li.inactive {
   display: none;
 }
-.slider .mask ul.fade li.previous {
+.slider .mask ul.fadein li.previous {
   opacity: 0;
 }
-.slider .mask ul.fade li.next {
+.slider .mask ul.fadein li.next {
   opacity: 0;
 }

@@ -15,7 +15,7 @@ window.onload = function () {
         swipeDelay: 3000
     };
 
-    var slider1 = new SliderFadeIn(document.getElementsByClassName('sliderWrapper1')[0], config1);
-    var slider2 = new SliderFadeIn(document.getElementsByClassName('sliderWrapper2')[0], config1);
+    var slider1 = new SliderSlide(document.getElementsByClassName('sliderWrapper1')[0], config1);
+    var slider2 = new SliderSlide(document.getElementsByClassName('sliderWrapper2')[0], config1);
 
 };

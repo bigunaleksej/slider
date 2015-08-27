@@ -1,16 +1,10 @@
-.container {
-  height: 600px;
-  text-align: center;
-}
 .slider {
-  height: 320px;
-  width: 680px;
-  border: 5px solid #eaeaea;
+  height: 100%;
+  width: 100%;
   margin: 0 auto;
-  background: #000;
 }
 .slider .mask {
-  height: 320px;
+  height: 100%;
   overflow: hidden;
 }
 .slider .mask ul {
@@ -18,8 +12,8 @@
 }
 .slider .mask ul li {
   position: absolute;
-  height: 320px;
-  width: 680px;
+  height: 100%;
+  width: 100%;
 }
 .slider .mask ul.slide li {
   transition: left 0.7s ease-in 0.3s;
